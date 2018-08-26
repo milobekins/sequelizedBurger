@@ -1,0 +1,92 @@
+               
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h1>On The Menu</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Burger Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each burgers}}
+                        {{#unless DEVOURED}}
+                            <tr>
+                                <td>{{id}}</td>
+                                <td>{{burger_name}}</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" id="devourBtn" data-id="{{id}}">Devour</button>
+                                </td>
+                            </tr>
+                        {{/unless}}
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-6">
+            <h1>In The Stomach</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Burger Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each burgers}}
+                        {{#if DEVOURED}}
+                            <tr>
+                                <td>{{id}}</td>
+                                <td>{{burger_name}}</td>
+                            </tr>
+                        {{/if}}
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form id="addBurger">
+                <div class="form-group">
+                    <label for="">Add A Burger To Menu:</label>
+                    <input type="text" class="form-control" id="burgerNameInput" placeholder="Your Burger">
+                </div>
+                <button type="submit" class="btn btn-primary" id="addBurgerSubmit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#addBurger").on("submit", function() {
+        event.preventDefault();
+        var addBurger = {
+            burgerName: $("#burgerNameInput").val().trim(),
+        }
+        $.ajax("/addBurger", {
+            type: "POST",
+            data: addBurger
+        }).then( function() {
+            console.log("post sent");
+        });
+        location.reload();
+
+    });
+    $("#devourBtn").on("click", function() {
+        console.log("in")
+        event.preventDefault();
+        var devourData = {
+        id: $(this).data("id"),
+        };
+        $.ajax("/devourBurger", {
+            type: "POST",
+            data: devourData
+        }).then( function() {
+            console.log("post sent");
+        });
+        location.reload();
+
+    })
+</script>
